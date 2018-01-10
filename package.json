@@ -1,0 +1,29 @@
+{
+    "name": "connecta Chat example",
+    "version": "0.0.1",
+    "description": "Connecta simple chat example",
+    "main": "server.js",
+    "keywords": [
+      "uws",
+      "websocket",
+      "webRTC",
+      "connecta",
+      "example"
+    ],
+    "author": {
+      "name": "Beka Mujirishvili",
+      "email": "ifrit88@gmail.com"
+    },
+    "license": "MIT",
+    "dependencies":{
+        "connecta":"*"
+    },
+    "devDependencies":{
+      "uglify-js": "*"
+    },
+    "repository":{
+      "type": "git",
+      "url": "git+https://github.com/AlphaReplica/Connecta-Simple-Example.git"
+    }
+  }
+  

@@ -1,0 +1,118 @@
+<!-- Connecta Simple chat example
+
+Created By Beka Mujirishvili 
+
+WebRTC messages are marked as green, fallback webRTC messages are marked as red-->
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="style.css">
+        <script src="connecta.js"></script>
+    </head>
+    <body>
+        <div class="cont">
+            <div class="row" id="roomName"></div>
+            <div class="row" id="roomUsers"></div>
+            <div id="chatBox"></div>
+            <div class="inputRow">
+                <input id="textInput" type="text" class="inputfield"/>
+                <div class="submitButton" onclick="onSubmit()">SEND</div>
+            </div>
+        </div>
+        <script type="text/javascript">
+        
+        var connecta;
+        var roomName;
+        var roomUsers;
+        var chatBox;
+        var textInput;
+
+        function setDom()
+        {
+            chatBox   = document.getElementById("chatBox");
+            roomName  = document.getElementById("roomName");
+            roomUsers = document.getElementById("roomUsers"); 
+            textInput = document.getElementById("textInput");
+            
+            roomName.innerText = "You are not connected yet";
+        }
+
+        function onSubmit()
+        {
+            if(textInput.value.length>0)
+            {
+                connecta.sendToPeers(textInput.value);
+                addMessage({id:"YOU",message:textInput.value});
+                textInput.value = "";
+            }
+        }
+        function addMessage(data)
+        {
+            var msgCont   = document.createElement('div');
+            var msg       = document.createElement('div');
+            var user      = document.createElement('div');
+            var className = 'messageCont ' + ((data.fallback === true) ? 'rtcfallback' : '');
+
+            msgCont.appendChild(user);
+            msgCont.appendChild(msg);
+            chatBox.appendChild(msgCont);
+
+            msg.innerText  = data.message;
+            user.innerText = data.id+":";
+
+            msgCont.setAttribute('class',className);
+            msg.setAttribute('class','message');
+            user.setAttribute('class','userID');
+        }
+
+        function connectToServer()
+        {
+            var stunServers   = ['stun.services.mozilla.com','stun.l.google.com:19302'];
+            var reconnectTime = 3;
+            var host          = 'ws://localhost:8038';
+
+            connecta = new Connecta(host,reconnectTime,stunServers);
+            connecta.addEventListener('connected' ,onConnected);
+            connecta.addEventListener('joinedRoom',onJoinedInRoom);
+            connecta.addEventListener('clientJoinedRoom',onPeeroinedInRoom);
+            connecta.addEventListener('clientLeftRoom',onPeerLeftRoom);
+            connecta.addEventListener('peerMessage',onPeerMessage);
+            connecta.addEventListener('roomUsersCount',onRoomPeersCount);
+
+            function onConnected(e)
+            {
+                console.log("Connected",e);
+            }
+
+            function onJoinedInRoom(e)
+            {
+                roomName.innerText = "You are now in " + e;
+            }
+
+            function onRoomPeersCount(e)
+            {
+                roomUsers.innerText = "Room Users: " + e.data;
+            }
+
+            function onPeeroinedInRoom(e)
+            {
+                console.log("Joined Clinet ROOM",e);
+            }
+
+            function onPeerLeftRoom(e)
+            {
+                console.log("Left Clinet ROOM",e);
+            }
+
+            function onPeerMessage(e)
+            {
+                addMessage(e);
+            }
+        }
+
+        setDom();
+        connectToServer();
+        </script>
+    </body>
+</html>
