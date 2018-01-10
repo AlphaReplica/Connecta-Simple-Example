@@ -1,5 +1,5 @@
 {
-    "name": "connecta Chat example",
+    "name": "connecta_example",
     "version": "0.0.1",
     "description": "Connecta simple chat example",
     "main": "server.js",
